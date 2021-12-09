@@ -556,12 +556,22 @@ void stuffing(unsigned char *data, struct data_buffer *stuffed_data, size_t data
 
 int send_i_frame(int fd, unsigned char *data, size_t data_size)
 {
+    usleep(1000000);
     unsigned char i_frame[MAX_DATA_BYTES];
     //printf("got here\n");
     struct data_buffer stuffed_data = {.size = 0, .i = 0};
     int write_res;
 
+    /*if (((rand() % 1000) + 1) == 1)
+    {
+        i_frame[0] = 0x6e;
+    }
+    else
+    {
+        i_frame[0] = FLAG;
+    }*/
     i_frame[0] = FLAG;
+    //printf("flag or not: %0x", i_frame[0]);
     i_frame[1] = A_SND;
     i_frame[2] = C_DATA(curr_n);
     i_frame[3] = BCC_I(curr_n);

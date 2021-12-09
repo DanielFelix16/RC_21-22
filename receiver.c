@@ -331,7 +331,7 @@ int i_receiver_sm(int fd, char *received_data)
         {
             return -1;
         }
-
+        //printf("read: %0x\n", iFrameBuffer[0]);
         switch (curr_state)
         {
 
@@ -341,6 +341,13 @@ int i_receiver_sm(int fd, char *received_data)
             {
                 curr_state = NEED_A;
                 //printf("first flag\n");
+            }
+
+            else
+            {
+                tcflush(fd, TCIFLUSH);
+                answer_data(fd, REJ(curr_n));
+                printf("Rejected frame\n");
             }
             break;
         }
@@ -360,7 +367,10 @@ int i_receiver_sm(int fd, char *received_data)
 
             else
             {
+                tcflush(fd, TCIFLUSH);
                 curr_state = NEED_FIRST_FLAG;
+                answer_data(fd, REJ(curr_n));
+                printf("Rejected frame\n");
             }
 
             break;
@@ -381,7 +391,10 @@ int i_receiver_sm(int fd, char *received_data)
 
             else
             {
+                tcflush(fd, TCIFLUSH);
                 curr_state = NEED_FIRST_FLAG;
+                answer_data(fd, REJ(curr_n));
+                printf("Rejected frame\n");
             }
 
             break;
@@ -402,7 +415,10 @@ int i_receiver_sm(int fd, char *received_data)
 
             else
             {
+                tcflush(fd, TCIFLUSH);
                 curr_state = NEED_FIRST_FLAG;
+                answer_data(fd, REJ(curr_n));
+                printf("Rejected frame\n");
             }
 
             break;
@@ -431,6 +447,7 @@ int i_receiver_sm(int fd, char *received_data)
                 }
                 else
                 {
+                    tcflush(fd, TCIFLUSH);
                     answer_data(fd, REJ(curr_n));
                     data_bytes_read = 0;
                     curr_state = NEED_FIRST_FLAG;

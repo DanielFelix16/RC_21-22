@@ -4,6 +4,7 @@
 #include <termios.h>
 #include <stdio.h>
 #include <time.h>
+#include <stdlib.h>
 #include "application.h"
 #include "data_link.h"
 
@@ -250,6 +251,7 @@ void check_file_size_on_end()
 int main(int argc, char **argv)
 {
     clock_t begin = clock();
+    srand(time(NULL));
 
     if ((argc < 3) ||
         ((strcmp("/dev/ttyS0", argv[1]) != 0) &&
