@@ -1,11 +1,6 @@
 #ifndef _APPLICATION__H_
 #define _APPLICATION__H_
 
-#define BAUDRATE B1200
-#define MODEMDEVICE "/dev/ttyS0"
-#define _POSIX_SOURCE 1 /* POSIX compliant source */
-#define FALSE 0
-#define TRUE 1
 #define MAX_BYTES_PACKET 65000
 #define PACKAGE_SIZE 512
 

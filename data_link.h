@@ -1,7 +1,8 @@
 #ifndef _DATA_LINK__H_
 #define _DATA_LINK__H_
 
-#define BAUDRATE B1200
+#define BAUDRATE B115200
+#define MODEMDEVICE "/dev/ttyS0"
 #define _POSIX_SOURCE 1 /* POSIX compliant source */
 #define FALSE 0
 #define TRUE 1

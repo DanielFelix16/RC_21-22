@@ -250,7 +250,10 @@ void check_file_size_on_end()
 
 int main(int argc, char **argv)
 {
-    clock_t begin = clock();
+    struct timeval tv;
+    gettimeofday(&tv, NULL);
+    unsigned long begin = 1000000 * tv.tv_sec + tv.tv_usec;
+
     srand(time(NULL));
 
     if ((argc < 3) ||
@@ -396,11 +399,10 @@ int main(int argc, char **argv)
         printf("Connection ended successfully\n");
     }
 
-    clock_t end = clock();
+    gettimeofday(&tv, NULL);
+    unsigned long end = 1000000 * tv.tv_sec + tv.tv_usec;
 
-    double elapsed_time = (double)(end - begin) / CLOCKS_PER_SEC;
-
-    printf("Time elapsed: %f seconds", elapsed_time);
+    printf("Time elapsed: %lu microseconds", (end - begin));
 
     return 0;
 }

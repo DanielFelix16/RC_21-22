@@ -6,7 +6,7 @@
 #include <termios.h>
 #include <stdio.h>
 #include <unistd.h>
-#define BAUDRATE B1200
+#define BAUDRATE B115200
 #define _POSIX_SOURCE 1 /* POSIX compliant source */
 #define FALSE 0
 #define TRUE 1
