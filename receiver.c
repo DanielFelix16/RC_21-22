@@ -348,6 +348,7 @@ int i_receiver_sm(int fd, char *received_data)
                 tcflush(fd, TCIFLUSH);
                 answer_data(fd, REJ(curr_n));
                 printf("Rejected frame\n");
+                num_of_rej++;
             }
             break;
         }
@@ -371,6 +372,7 @@ int i_receiver_sm(int fd, char *received_data)
                 curr_state = NEED_FIRST_FLAG;
                 answer_data(fd, REJ(curr_n));
                 printf("Rejected frame\n");
+                num_of_rej++;
             }
 
             break;
@@ -395,6 +397,7 @@ int i_receiver_sm(int fd, char *received_data)
                 curr_state = NEED_FIRST_FLAG;
                 answer_data(fd, REJ(curr_n));
                 printf("Rejected frame\n");
+                num_of_rej++;
             }
 
             break;
@@ -419,6 +422,7 @@ int i_receiver_sm(int fd, char *received_data)
                 curr_state = NEED_FIRST_FLAG;
                 answer_data(fd, REJ(curr_n));
                 printf("Rejected frame\n");
+                num_of_rej++;
             }
 
             break;
@@ -452,6 +456,7 @@ int i_receiver_sm(int fd, char *received_data)
                     data_bytes_read = 0;
                     curr_state = NEED_FIRST_FLAG;
                     printf("Rejected frame\n");
+                    num_of_rej++;
                     break;
                 }
 

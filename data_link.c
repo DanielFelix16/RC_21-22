@@ -10,6 +10,7 @@
 
 struct termios newtio, oldtio;
 extern unsigned int curr_n;
+extern unsigned int num_of_rej;
 
 int llopen(char *port, enum port_type type)
 {
@@ -57,6 +58,8 @@ int llopen(char *port, enum port_type type)
             llclose(fd, RECEIVER);
             return -1;
         }
+
+        num_of_rej = 0;
 
         //printf("after write_s_ack\n");
     }
@@ -111,6 +114,7 @@ int llclose(int fd, enum port_type type)
     }
 
     serial_port_close(fd);
+    printf("Number of rejected frames: %d\n", num_of_rej);
 
     return 0;
 }

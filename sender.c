@@ -556,7 +556,7 @@ void stuffing(unsigned char *data, struct data_buffer *stuffed_data, size_t data
 
 int send_i_frame(int fd, unsigned char *data, size_t data_size)
 {
-    usleep(1000000);
+    //usleep(1000000);
     unsigned char i_frame[MAX_DATA_BYTES];
     //printf("got here\n");
     struct data_buffer stuffed_data = {.size = 0, .i = 0};

@@ -1,6 +1,8 @@
 #ifndef _S_FRAME_RECEIVER__H_
 #define _S_FRAME_RECEIVER__H_
 
+unsigned int num_of_rej;
+
 int nn_receiver_sm(int fd, char received);
 
 int write_nn_ack(int fd);
