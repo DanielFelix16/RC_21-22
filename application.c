@@ -41,7 +41,7 @@ int build_start_end_package(unsigned char *package, char *filename, char *filesi
 int build_data_package(unsigned char *package, char *data, int data_size)
 {
     package[0] = 1;
-    //printf("data size changed?: %d\n", data_size);
+
     static char sequence_number = 0;
     package[1] = sequence_number;
     sequence_number++;
@@ -49,9 +49,6 @@ int build_data_package(unsigned char *package, char *data, int data_size)
 
     unsigned int l2 = data_size / 256;
     unsigned int l1 = data_size % 256;
-
-    //printf("l2: %d\n", l2);
-    //printf("l1: %d\n", l1);
 
     package[2] = l2;
     package[3] = l1;
@@ -69,11 +66,8 @@ int send_start_end_package(int fd, int filesize_size, int start_or_end)
     int package_max_size = 1 + 4 + strlen(file.name) + filesize_size;
     unsigned char package[package_max_size];
 
-    //printf("got here before building package\n");
-
     int package_size = build_start_end_package(&package, file.name, file.size_char, strlen(file.name), filesize_size, start_or_end);
 
-    //printf("start package size: %d\n", package_size);
     if (llwrite(fd, &package, package_size) == -1)
     {
         return -1;
@@ -88,7 +82,6 @@ int send_data_package(int fd, char *data, int data_size)
 
     int package_size = build_data_package(&package, data, data_size);
 
-    //printf("data package size: %d\n", package_size);
     if (llwrite(fd, &package, package_size) == -1)
     {
         return -1;
@@ -115,8 +108,6 @@ int get_package(int fd)
 
     store_data_size = llread(fd, &store_data);
 
-    //printf("after llread\n");
-
     if (store_data[0] == 1)
     {
         unsigned char data[PACKAGE_SIZE];
@@ -136,10 +127,7 @@ int get_package(int fd)
 
     else if (store_data[0] == 3)
     {
-        //printf("before parse_file_info\n");
         parse_file_info(&store_data, &new_file);
-        //printf("after parse_file_info\n");
-        //check_file_size_on_end();
         fclose(new_file.fp);
         printf("Closed file\n");
         return 1;
@@ -164,14 +152,12 @@ void parse_file_info(char *data, struct file *file_to_get_info)
     curr_i = curr_i + 4;
 
     int filename_size = data[curr_i];
-    //printf("filename size: %d", filename_size);
     file_to_get_info->name = (char *)malloc(filename_size + 1);
     file_to_get_info->name[filename_size] = '\0';
 
     for (size_t i = 0; i < filename_size; i++, curr_i++)
     {
         file_to_get_info->name[i] = data[curr_i + 1];
-        //printf("name: %0x\n", file_to_get_info->name[i]);
     }
 }
 
@@ -185,8 +171,6 @@ int read_file_send_data(int fd)
     while (1)
     {
         int size_read = fread(&file_data, sizeof(char), PACKAGE_SIZE, file.fp);
-
-        //printf("size_read: %d\n", size_read);
 
         if (size_read > 0)
         {
@@ -211,14 +195,9 @@ int extract_data_from_package(unsigned char *data, unsigned char *package)
 {
     int data_size = 256 * package[2] + package[3];
 
-    //printf("data size: %d\n", data_size);
-    //printf("package 2: %d\n", package[2]);
-    //printf("package 3: %d\n", package[3]);
-
     for (size_t i = 0; i < data_size; i++)
     {
         data[i] = package[i + 4];
-        //printf("data[%d]: %0x\n", i, data[i]);
     }
 
     return data_size;
@@ -229,24 +208,6 @@ void write_data_to_file(char *data, int data_size)
     fseek(new_file.fp, 0, SEEK_END);
     fwrite(data, sizeof(char), data_size, new_file.fp);
 }
-
-/*
-void check_file_size_on_end()
-{
-    new_file.size = get_file_size(new_file.fp);
-    printf("new file size: %d\n", new_file.size);
-    printf("file size: %d\n", file.size);
-
-    if (new_file.size == file.size)
-    {
-        printf("File has the same size as the one transferred\n");
-    }
-
-    else
-    {
-        printf("File doesn't have the same size as the one transferred\n");
-    }
-}*/
 
 int main(int argc, char **argv)
 {
@@ -277,21 +238,15 @@ int main(int argc, char **argv)
             exit(-1);
         }
 
-        //printf("Got here b4 check\n");
-
         if (argv[3] == NULL)
         {
             printf("No file name\n");
             exit(-1);
         }
 
-        //printf("Got here b4 name\n");
-
         file.name = argv[3];
 
         file.fp = fopen(file.name, "rb");
-
-        //printf("Got here\n");
 
         if (file.fp == NULL)
         {
@@ -303,8 +258,6 @@ int main(int argc, char **argv)
 
         file.size = get_file_size(file.fp);
 
-        //printf("Got file size\n");
-
         if (file.size == -1)
         {
             printf("Couldn't get file size\n");
@@ -314,15 +267,11 @@ int main(int argc, char **argv)
         int filesize_size = 0;
         int temp_size = file.size;
 
-        //printf("file size: %0x", file.size);
-
         while (temp_size != 0)
         {
             temp_size /= 256;
             filesize_size += 1;
         }
-
-        //printf("got here before for\n");
 
         file.size_char = (char *)malloc(filesize_size);
 
@@ -330,8 +279,6 @@ int main(int argc, char **argv)
         {
             file.size_char[j] = file.size >> (i * 8);
         }
-
-        //printf("strlen filename size: %d\n", strlen(file.name));
 
         if (send_start_end_package(fd, filesize_size, 0) == -1)
         {
@@ -367,8 +314,6 @@ int main(int argc, char **argv)
     {
         fd = llopen(argv[1], RECEIVER);
 
-        //printf("got here 2\n");
-
         if (fd == -1)
         {
             exit(-1);
@@ -387,14 +332,10 @@ int main(int argc, char **argv)
             }
         }
 
-        //printf("didnt llclose\n");
-
         if (llclose(fd, RECEIVER) == -1)
         {
             exit(-1);
         }
-
-        //printf("llclosed\n");
 
         printf("Connection ended successfully\n");
     }

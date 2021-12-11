@@ -48,17 +48,6 @@ int bcci_rcv(unsigned char rcv)
     return 1;
 }
 
-/*int bcc2_rcv(unsigned char rcv)
-{
-
-    if (rcv == BCC)
-    {
-        return 0;
-    }
-
-    return 1;
-}*/
-
 int rr_rcv(unsigned char rcv)
 {
     if (rcv == RR(curr_n))

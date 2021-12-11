@@ -29,7 +29,6 @@ int nn_receiver_sm(int fd, char received)
             if (flag_rcv(frameBuffer[0]) == 0)
             {
                 curr_state = NEED_A;
-                //printf("first flag\n");
             }
             break;
         }
@@ -41,7 +40,6 @@ int nn_receiver_sm(int fd, char received)
                 if (frameBuffer[0] == A_RCV)
                 {
                     curr_state = NEED_CTRL;
-                    //printf("a disc\n");
                 }
 
                 else if (flag_rcv(frameBuffer[0]) == 0)
@@ -60,7 +58,6 @@ int nn_receiver_sm(int fd, char received)
                 if (a_rcv(frameBuffer[0]) == 0)
                 {
                     curr_state = NEED_CTRL;
-                    //printf("a\n");
                 }
 
                 else if (flag_rcv(frameBuffer[0]) == 0)
@@ -83,22 +80,7 @@ int nn_receiver_sm(int fd, char received)
             {
                 bcc_control = received;
                 curr_state = NEED_BCC;
-                //printf("%0x\n", received);
             }
-
-            /*else if (control_rcv(frameBuffer[0], C_SET) == 0)
-            {
-                bcc_control = C_SET;
-                curr_state = NEED_BCC;
-                printf("set\n");
-            }
-
-            else if (control_rcv(frameBuffer[0], C_UA) == 0)
-            {
-                bcc_control = C_UA;
-                curr_state = NEED_BCC;
-                printf("disc ua\n");
-            }*/
 
             else if (flag_rcv(frameBuffer[0]) == 0)
             {
@@ -120,7 +102,6 @@ int nn_receiver_sm(int fd, char received)
                 if (frameBuffer[0] == (A_RCV ^ received))
                 {
                     curr_state = NEED_LAST_FLAG;
-                    //printf("bcc disc\n");
                 }
 
                 else if (flag_rcv(frameBuffer[0]) == 0)
@@ -139,7 +120,6 @@ int nn_receiver_sm(int fd, char received)
                 if (bcc_rcv(frameBuffer[0], bcc_control) == 0)
                 {
                     curr_state = NEED_LAST_FLAG;
-                    //printf("bcc\n");
                 }
 
                 else if (flag_rcv(frameBuffer[0]) == 0)
@@ -160,7 +140,6 @@ int nn_receiver_sm(int fd, char received)
         {
             if (flag_rcv(frameBuffer[0]) == 0)
             {
-                //printf("final flag\n");
                 return 0;
             }
 
@@ -174,114 +153,6 @@ int nn_receiver_sm(int fd, char received)
         }
     }
 }
-
-/*
-int s_receiver_sm(int fd)
-{
-    unsigned char frameBuffer[1];
-    unsigned int curr_state = NEED_FIRST_FLAG;
-
-    while (1)
-    {
-        read(fd, frameBuffer, 1);
-        printf("read\n");
-
-        switch (curr_state)
-        {
-
-        case NEED_FIRST_FLAG:
-        {
-            if (flag_rcv(frameBuffer[0]) == 0)
-            {
-                curr_state = NEED_A;
-                printf("first flag\n");
-            }
-            break;
-        }
-
-        case NEED_A:
-        {
-            if (a_rcv(frameBuffer[0]) == 0)
-            {
-                curr_state = NEED_SET;
-                printf("a\n");
-            }
-
-            else if (flag_rcv(frameBuffer[0]) == 0)
-            {
-                curr_state = NEED_A;
-            }
-
-            else
-            {
-                curr_state = NEED_FIRST_FLAG;
-            }
-
-            break;
-        }
-
-        case NEED_SET:
-        {
-            if (set_rcv(frameBuffer[0]) == 0)
-            {
-                curr_state = NEED_BCC;
-                printf("set\n");
-            }
-
-            else if (flag_rcv(frameBuffer[0]) == 0)
-            {
-                curr_state = NEED_A;
-            }
-
-            else
-            {
-                curr_state = NEED_FIRST_FLAG;
-            }
-
-            break;
-        }
-
-        case NEED_BCC:
-        {
-            if (bcc_rcv(frameBuffer[0]) == 0)
-            {
-                curr_state = NEED_LAST_FLAG;
-                printf("bcc\n");
-            }
-
-            else if (flag_rcv(frameBuffer[0]) == 0)
-            {
-                curr_state = NEED_A;
-            }
-
-            else
-            {
-                curr_state = NEED_FIRST_FLAG;
-            }
-
-            break;
-        }
-
-        case NEED_LAST_FLAG:
-        {
-            if (flag_rcv(frameBuffer[0]) == 0)
-            {
-                printf("last flag\n");
-                return 0;
-            }
-
-            else
-            {
-                curr_state = NEED_FIRST_FLAG;
-            }
-
-            break;
-        }
-        }
-    }
-
-    return 1;
-}*/
 
 int write_nn_ack(int fd)
 {
@@ -331,7 +202,6 @@ int i_receiver_sm(int fd, char *received_data)
         {
             return -1;
         }
-        //printf("read: %0x\n", iFrameBuffer[0]);
         switch (curr_state)
         {
 
@@ -340,7 +210,6 @@ int i_receiver_sm(int fd, char *received_data)
             if (flag_rcv(iFrameBuffer[0]) == 0)
             {
                 curr_state = NEED_A;
-                //printf("first flag\n");
             }
 
             else
@@ -358,7 +227,6 @@ int i_receiver_sm(int fd, char *received_data)
             if (a_rcv(iFrameBuffer[0]) == 0)
             {
                 curr_state = NEED_C;
-                //printf("a\n");
             }
 
             else if (flag_rcv(iFrameBuffer[0]) == 0)
@@ -383,7 +251,6 @@ int i_receiver_sm(int fd, char *received_data)
             if (c_rcv(iFrameBuffer[0]) == 0)
             {
                 curr_state = NEED_BCC;
-                //printf("c\n");
             }
 
             else if (flag_rcv(iFrameBuffer[0]) == 0)
@@ -408,7 +275,6 @@ int i_receiver_sm(int fd, char *received_data)
             if (bcci_rcv(iFrameBuffer[0]) == 0)
             {
                 curr_state = READ_DATA;
-                //printf("bcc\n");
             }
 
             else if (flag_rcv(iFrameBuffer[0]) == 0)
@@ -439,7 +305,6 @@ int i_receiver_sm(int fd, char *received_data)
             {
                 struct data_buffer destuffed_data = {.size = 0, .i = 0};
                 destuffing(data, &destuffed_data, data_bytes_read);
-                //print_array(destuffed_data.buffer);
                 if (calc_bcc(&destuffed_data) == 0)
                 {
                     answer_data(fd, RR(curr_n));
@@ -460,7 +325,6 @@ int i_receiver_sm(int fd, char *received_data)
                     break;
                 }
 
-                //printf("returned here\n");
                 return 0;
             }
         }

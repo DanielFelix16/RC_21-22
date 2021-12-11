@@ -18,11 +18,7 @@ int llopen(char *port, enum port_type type)
 
     curr_n = 1;
 
-    //printf("got here llopen 1\n");
-
     serial_port_setup(port, &fd);
-
-    //printf("got here llopen 2\n");
 
     if (type == TRANSMITTER)
     {
@@ -39,8 +35,6 @@ int llopen(char *port, enum port_type type)
             llclose(fd, TRANSMITTER);
             return -1;
         }
-
-        //printf("after s_sender_sm\n");
     }
 
     else if (type == RECEIVER)
@@ -60,11 +54,8 @@ int llopen(char *port, enum port_type type)
         }
 
         num_of_rej = 0;
-
-        //printf("after write_s_ack\n");
     }
 
-    //printf("before fd\n");
     return fd;
 }
 
