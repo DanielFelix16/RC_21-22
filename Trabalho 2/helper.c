@@ -3,7 +3,7 @@
 #include <string.h>
 #include "helper.h"
 
-unsigned int count_ocurrences(char *string, char count_char)
+unsigned int count_occurrences(char *string, char count_char)
 {
     unsigned int i = 0;
     unsigned int res = 0;

@@ -54,6 +54,8 @@ int close_socket(int sockfd)
         perror("close()");
         return 1;
     }
+
+    return 0;
 }
 
 int get_ip(struct hostent *h)
@@ -74,6 +76,7 @@ int get_ip(struct hostent *h)
 
 int parse_url_arg(char *url_arg)
 {
+    // allocate memory for all the info that'll be retrieved from the argument
     info.user = (char *)malloc(MAX_INFO_SIZE);
     info.password = (char *)malloc(MAX_INFO_SIZE);
     info.host = (char *)malloc(MAX_INFO_SIZE);
@@ -97,6 +100,7 @@ int parse_url_arg(char *url_arg)
     {
         switch (state)
         {
+        // the program's argument has to begin with "ftp://"
         case FTP_PART:
         {
             for (unsigned int k = 0; k < 6; k++)
@@ -108,10 +112,10 @@ int parse_url_arg(char *url_arg)
                 }
             }
 
-            printf("ftp part\n");
             i += 6;
 
-            if (count_ocurrences(url_arg, '@') == 0)
+            // if there is no '@' in the argument, the user is logging in anonymously
+            if (count_occurrences(url_arg, '@') == 0)
             {
                 state = HOST_PART;
                 strcpy(info.user, "anonymous");
@@ -209,6 +213,7 @@ int write_cmd(int sockfd, char *cmd, char *cmd_param)
         return 1;
     }
 
+    // not every command sent to the server has a parameter
     if (cmd_param_size != 0)
     {
         if (write(sockfd, cmd_param, cmd_param_size) == -1)
@@ -344,6 +349,8 @@ int quit(int sockfd)
         printf("Failed to quit\n");
         return 1;
     }
+
+    return 0;
 }
 
 int enter_psv_mode(int sockfd, int *new_port)
@@ -417,6 +424,8 @@ int download_file(int sockfd, int sockfd_file)
     } while (size_read > 0);
 
     fclose(fp);
+
+    return 0;
 }
 
 void write_to_file(FILE *fp, char *data, int data_size)
