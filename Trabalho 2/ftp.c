@@ -499,6 +499,14 @@ int main(int argc, char **argv)
 
     printf("Downloaded requested file\n");
 
+    if (quit(sockfd) == -1)
+    {
+        printf("Error logging out\n");
+        exit(-1);
+    }
+
+    printf("Logged out\n");
+
     if (close_socket(sockfd_psv) == 1)
     {
         printf("Error closing passive mode socket\n");
